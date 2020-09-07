@@ -60,7 +60,7 @@ function mainPrompt() {
                 'View all Employees',
                 'Add an Employee',
                 'View all Roles',
-                'Add a Role'
+                'Add a Role',
                 'View all Departments',
                 'Add a New Department',
                 'Update Employees Role'
@@ -83,7 +83,86 @@ function mainPrompt() {
                     continuePrompt();
                 });
                 break;
-            
+                //View All Roles
+            case 'View all Roles':
+                var query = connection.query('SELECT * FROM role', function (err,data) {
+                    if (err) throw err;
+                    console.table(data);
+                    continuePrompt();
+                });
+                break;
+                //Add Roles
+            case 'Add a Role':
+                var query = connection.query('SELECT id FROM department', function (err, data) {
+                    if (err) throw err;
+                    let choices = data.map(x => `${x.id} - ${x.department}`);
+                    inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'title',
+                            message: 'What is the Role?',
+                            validate: validateString
+                        },
+                        {
+                            type: 'input',
+                            name: 'salary',
+                            message: 'Enter Salary',
+                            validate: validateInteger
+                        },
+                        {
+                            type: 'list',
+                            name: 'department',
+                            message: 'What Department?',
+                            choices: [...choices]
+                        }
+                    ]).then(function (data) {
+                        var arr = data.department.split('');
+                        var deptID = parseInt(arr[0]);
+                        var query = connection.query(`INSERT INTO role (title, salary department_id) VALUES ('${data.title}', ${data.salary}, ${deptID})`, function (err, data) {
+                            if (err) throw err;
+                            console.log('Role has been Added');
+                            continuePrompt();
+                        });
+                    });
+                });
+                break;
+            //Added an employee
+            case 'Add an Employee':
+                var query = connection.query('SELECT id, title FROM role', function(err,data) {
+                    if (err) throw err;
+                    let choices = data.map(x => `${x.id} - ${x.title}`);
+                    inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'firstName',
+                            message: 'Employees First Name?',
+                            validate: validateString
+                        },
+                        {
+                            type: 'input',
+                            name: 'lastName',
+                            message: 'Employees Last Name?',
+                            validate: validateString
+                        },
+                        {
+                            type: 'list',
+                            name: 'role',
+                            message: 'Select Employees Role',
+                            choices: [...choices]
+                        }
+                    ]).then(function(data) {
+                        var arr = data.role.split('');
+                        var roleID = parseInt(arr[0]);
+                        var query = connection.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ('${data.firstName}', '${data.lastName}', ${roleID}, 0)`, function (err, data) {
+                            if (err) throw err;
+                            console.log("Employee has been Added")
+                            continuePrompt();
+                        });   
+                    });
+                });
+                break;
+
+            //Add a department
         }
     })
 }
