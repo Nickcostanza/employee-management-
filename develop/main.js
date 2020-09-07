@@ -50,3 +50,41 @@ function continuePrompt() {
     })
 }
 
+function mainPrompt() {
+    inquirer.prompt([
+        {
+            type: 'list',
+            name: 'mainMenu',
+            message: 'Select an option',
+            choices: [
+                'View all Employees',
+                'Add an Employee',
+                'View all Roles',
+                'Add a Role'
+                'View all Departments',
+                'Add a New Department',
+                'Update Employees Role'
+            ]  
+        }
+    ]).then(function (answer) {
+        switch(answer.mainMenu) {
+            //View All Employees
+            case 'View all Employees':
+                var query = connection.query('SELECT * FROM employee', function (err, data) {
+                    if (err) throw err;
+                    console.table(data);
+                    continuePrompt();
+                });
+                break;
+            case 'View all Departments':
+                var query = connection.query('SELECT * FROM department', function (err, data) {
+                    if (err) throw err;
+                    console.table(data);
+                    continuePrompt();
+                });
+                break;
+            
+        }
+    })
+}
+
