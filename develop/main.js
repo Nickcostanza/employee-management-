@@ -161,8 +161,23 @@ function mainPrompt() {
                     });
                 });
                 break;
-
-            //Add a department
+                //Add a department
+            case "Add a New Department":
+                inquirer.prompt([
+                    {
+                        type: 'input',
+                        name: 'department',
+                        message: 'Enter the New Departmens Name'
+                        validate: validateString
+                    }
+                ]).then(function(data) {
+                    var query = connection.query(`INSERT INTO department (department) VALUES ('${data.department}');`, funtion(err,data) {
+                        if (err) throw err;
+                        return data;
+                    })
+                    console.log('Department Has Been Added')
+                });
+                break;
         }
     })
 }
