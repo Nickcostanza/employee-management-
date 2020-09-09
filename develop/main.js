@@ -77,7 +77,7 @@ function mainPrompt() {
                 });
                 break;
             case 'View all Departments':
-                var query = connection.query('SELECT * FROM department', function (err, data) {
+                var query = connection.query('SELECT * FROM departments', function (err, data) {
                     if (err) throw err;
                     console.table(data);
                     continuePrompt();
@@ -93,7 +93,7 @@ function mainPrompt() {
                 break;
                 //Add Roles
             case 'Add a Role':
-                var query = connection.query('SELECT id FROM department', function (err, data) {
+                var query = connection.query('SELECT id, department FROM departments', function (err, data) {
                     if (err) throw err;
                     let choices = data.map(x => `${x.id} - ${x.department}`);
                     inquirer.prompt([
@@ -118,7 +118,7 @@ function mainPrompt() {
                     ]).then(function (data) {
                         var arr = data.department.split('');
                         var deptID = parseInt(arr[0]);
-                        var query = connection.query(`INSERT INTO role (title, salary department_id) VALUES ('${data.title}', ${data.salary}, ${deptID})`, function (err, data) {
+                        var query = connection.query(`INSERT INTO role (title, salary, department_id) VALUES ('${data.title}', ${data.salary}, ${deptID})`, function (err, data) {
                             if (err) throw err;
                             console.log('Role has been Added');
                             continuePrompt();
@@ -171,7 +171,7 @@ function mainPrompt() {
                         validate: validateString
                     }
                 ]).then(function(data) {
-                    var query = connection.query(`INSERT INTO department (department) VALUES ('${data.department}');`, function(err,data) {
+                    var query = connection.query(`INSERT INTO departments (department) VALUES ('${data.department}');`, function(err,data) {
                         if (err) throw err;
                         return data;
                     })
